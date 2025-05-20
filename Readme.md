@@ -108,10 +108,10 @@ GitHub PR event → Flask Webhook (app.py)
 
 Try the bot live on our sample Pull Request: [View Sample PR](https://github.com/your-org/osg-dependency-bot/pull/1)
 
-![Dependency Scan Report – Collapsed View](docs/screenshots/dependency-report-collapsed.png)
+![Dependency Scan Report – Collapsed View](docs/screenshots/dependency-report-collapsed.PNG)
 *Collapsed summary showing license risk legend and sections.*
 
-![Dependency Scan Report – Expanded Table](docs/screenshots/dependency-report-expanded.png)
+![Dependency Scan Report – Expanded Table](docs/screenshots/dependency-report-expanded.PNG)
 *Detailed table listing scanned dependencies, versions, licenses, risk classifications, and sources.*
 
 ---
@@ -122,7 +122,7 @@ Try the bot live on our sample Pull Request: [View Sample PR](https://github.com
 
 When a PR with risky/high-risk licenses is merged, the bot automatically opens a GitHub Issue for governance tracking:
 
-![License Risk Alert Issue](docs/screenshots/license-risk-alert-issue.png)
+![License Risk Alert Issue](docs/screenshots/license-risk-alert-issue.PNG)
 *Automated issue created showing detected high-risk dependencies and prompting for remediation.*
 
 ---
