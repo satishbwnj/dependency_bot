@@ -1,6 +1,6 @@
 # Early License Risk Detection Bot
 
-**Hackathon 2025 Submission**
+**JPMC Hackathon 2025 Submission**
 **Track:** Open-Source Governance Automation
 
 ## 🏁 Project Overview
@@ -105,9 +105,25 @@ GitHub PR event → Flask Webhook (app.py)
 ---
 
 ## 📸 Demo
-1. Open a Pull Request containing a dependency change.  
-2. Bot comments with license summary, risk levels, and remediation links.  
-3. Merge a PR with risky license → Bot opens a GitHub Issue for governance tracking.
+
+Try the bot live on our sample Pull Request: [View Sample PR](https://github.com/your-org/osg-dependency-bot/pull/1)
+
+![Dependency Scan Report – Collapsed View](docs/screenshots/dependency-report-collapsed.png)
+*Collapsed summary showing license risk legend and sections.*
+
+![Dependency Scan Report – Expanded Table](docs/screenshots/dependency-report-expanded.png)
+*Detailed table listing scanned dependencies, versions, licenses, risk classifications, and sources.*
+
+---
+
+---
+
+## 📭 Issue Alerts
+
+When a PR with risky/high-risk licenses is merged, the bot automatically opens a GitHub Issue for governance tracking:
+
+![License Risk Alert Issue](docs/screenshots/license-risk-alert-issue.png)
+*Automated issue created showing detected high-risk dependencies and prompting for remediation.*
 
 ---
 
@@ -119,6 +135,8 @@ GitHub PR event → Flask Webhook (app.py)
 ---
 
 ## 🙋‍♂️ Team & Contact
-**Satish** 
+**Satish Paladugu** (Project Lead)  
+Email: satish.paladugu@yourfirm.com
 
 Thank you for reviewing our submission—looking forward to feedback!
+
