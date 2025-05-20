@@ -1,156 +1,124 @@
-# Dependency Bot
+# Early License Risk Detection Bot
 
-A GitHub App that scans pull requests for dependency license and risk issues, then comments on the PR with detailed findings.
+**Hackathon 2025 Submission**
+**Track:** Open-Source Governance Automation
 
-## Code Review Summary
+## 🏁 Project Overview
+Early License Risk Detection Bot (`osg-dependency-bot`) empowers developers by scanning dependencies at pull request time, classifying license risk, and automating governance workflows before code merges into production.
 
-- **Modular Design**: Code is organized into logical packages (`depsdev`, `parsers`, `utils`), making it easy to extend support for additional ecosystems.
-- **Authentication & Security**: Uses JWT-based authentication (`auth.py`) and signature verification (`utils/signature_verifier.py`) to securely handle GitHub webhooks and API requests.
-- **Dockerization**: Includes a `Dockerfile` and `docker-compose.yml` for containerized development and deployment.
-- **Areas for Improvement**:
-  - Centralize configuration: consider using a `config.py` or environment-loading library to validate and manage all environment variables in one place.
-  - Logging: replace print statements (if present) with the `logging` module to enable configurable log levels and better troubleshooting.
-  - Error Handling: add more granular exception handling around API calls and parsing routines to avoid crashing on unexpected input.
-  - Testing: include unit tests for parsers and utility functions to ensure reliability when adding new features.
+**Hackathon Challenge Alignment:**
+- Embeds compliance checks into developer workflow (DevOps integration)  
+- Demonstrates event-driven, scalable architecture  
+- Lays groundwork for AI-driven self-healing pipelines (future Innovation Track)
 
 ---
 
-## Table of Contents
+## 🎯 Objectives
+1. **Proactive Governance:** Detect Red/Yellow license risks early in PRs.  
+2. **Developer Empowerment:** Provide actionable feedback directly in GitHub PR comments.  
+3. **Seamless Automation:** Automatically open GitHub Issues for any risky licenses merged.
 
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running Locally](#running-locally)
-- [Docker](#docker)
-- [GitHub App Setup](#github-app-setup)
-- [Usage](#usage)
-- [Directory Structure](#directory-structure)
-- [Contributing](#contributing)
-- [License](#license)
+---
 
-## Prerequisites
+## ✅ Prototype Status
+- **Webhooks & JWT Auth:** Secure handling of GitHub events (`auth.py`).  
+- **Dependency Parsing:** Supports Maven manifests (`pom.xml`) via `parsers/maven_parser.py`.  
+- **Risk Classification:** Leverages DepsDev API to tag licenses as Safe, Risky, or High Risk.  
+- **Automated Comments & Issues:** Posts detailed reports on PRs and creates Issues post-merge.  
+- **Containerized Deployment:** `Dockerfile` & `docker-compose.yml` for local or cloud hosting.
 
-- Python 3.9 or higher
-- Docker & Docker Compose (if using containers)
-- GitHub account with permissions to create a GitHub App
+---
 
-## Installation
+## 🚀 Quick Start
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-org/dependency-bot.git
-   cd dependency-bot
-   ```
-2. Create a virtual environment and install dependencies:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
+### Prerequisites
+- Python 3.9+  
+- Docker & Docker Compose  
+- GitHub account with App creation permissions
 
-## Configuration
+### 1. Clone Repository
+```bash
+git clone https://github.com/your-org/osg-dependency-bot.git
+cd osg-dependency-bot
+```
 
-The application requires several environment variables:
-
-| Variable                 | Description                                  |
-| ------------------------ | -------------------------------------------- |
-| `GITHUB_APP_ID`          | Your GitHub App ID                           |
-| `GITHUB_APP_PRIVATE_KEY` | Path to the GitHub App private key (.pem)    |
-| `WEBHOOK_SECRET`         | Secret used to secure webhook payloads       |
-| `FLASK_ENV`              | (optional) `development` or `production`     |
-
-You can set these in a `.env` file at the project root:
-
-```dotenv
-GITHUB_APP_ID=12345
-GITHUB_APP_PRIVATE_KEY=./keys/app_private_key.pem
-WEBHOOK_SECRET=your_webhook_secret
-FLASK_ENV=development
+### 2. Install Dependencies & Setup
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env with your values
 ```  
 
-## Running Locally
+| Variable                 | Description                                 |
+|--------------------------|---------------------------------------------|
+| `GITHUB_APP_ID`          | GitHub App ID                               |
+| `GITHUB_APP_PRIVATE_KEY` | Path to PEM private key                     |
+| `WEBHOOK_SECRET`         | Webhook secret for payload verification     |
+| `FLASK_ENV`              | `development` or `production`               |
 
+### 3. Run Locally
 ```bash
-source venv/bin/activate
 export $(grep -v '^#' .env | xargs)
 python app.py
 ```  
-The server will listen on port 5000 by default.
+Server listens on **port 5000** by default.
 
-## Docker
-
-Build and run with Docker Compose:
-
+### 4. Docker Deployment
 ```bash
 docker-compose build
-docker-compose up
+docker-compose up -d
 ```
 
-## GitHub App Setup
+---
 
-1. **Create a new GitHub App:**
-   - Go to **Settings > Developer settings > GitHub Apps** and click **New GitHub App**.
-   - **Name:** Dependency Bot
-   - **Homepage URL:** `https://your-domain.com`
-   - **Webhook URL:** `https://your-domain.com/webhook`
-   - **Webhook secret:** (copy into `WEBHOOK_SECRET`)
+## 🔧 GitHub App Setup
+1. **Register App:**  
+   - Settings → Developer settings → GitHub Apps → New GitHub App  
+   - Name: **Dependency Risk Detection Bot**  
+   - Homepage URL: `https://demo.your-domain.com`  
+   - Webhook URL: `https://demo.your-domain.com/webhook`  
+   - Webhook Secret: copy into `.env`
+2. **Permissions:**  
+   - Repositories → Contents: **Read-only**  
+   - Pull requests: **Read & write**  
+   - Issues: **Read & write**  
+3. **Events Subscribed:**  
+   - Pull request  
+   - Pull request review  
+   - Pull request review comment
+4. **Generate & Download Private Key:**  
+   - Save as `keys/app_private_key.pem` and update `.env`
+5. **Install App:**  
+   - Install on target repo or organization-wide
 
-2. **Permissions & Events:**
-   - **Repository permissions:**
-     - **Contents:** Read-only
-     - **Pull requests:** Read & write
-     - **Issues:** Read & write
-   - **Subscribe to events:**
-     - **Pull request**
-     - **Pull request review**
-     - **Pull request review comment**
+---
 
-3. **Generate a private key:**
-   - After creating the app, generate and download the private key.
-   - Save it (e.g., `keys/app_private_key.pem`) and reference its path in `GITHUB_APP_PRIVATE_KEY`.
-
-4. **Install the App on your repository:**
-   - Go to your GitHub App settings and click **Install App**.
-   - Choose the repository (or organization-wide) installation.
-
-## Usage
-
-Once the app is installed and running, it will automatically scan incoming pull requests and post comments with:
-
-- License compliance details
-- Risk classification of dependencies
-- Suggested remediation or further reading links
-
-## Directory Structure
-
-```
-├── app.py                # Flask webhook entry point
-├── auth.py               # JWT authentication helper
-├── depsdev/              # Integrations with external dependency data sources
-│   ├── maven.py
-│   ├── npm.py
-│   └── pypi.py
-├── parsers/              # Dependency manifest parsers
-│   ├── maven_parser.py
-│   ├── node_parser.py
-│   └── python_parser.py
-├── utils/                # Core processing and commenting logic
-│   ├── pr_processor.py
-│   ├── pr_commenter.py
-│   ├── risk_classifier.py
-│   ├── risky_issue_creator.py
-│   └── signature_verifier.py
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── .github/
-    └── workflows/deploy.yml
+## 🗂️ Architecture
+```text
+GitHub PR event → Flask Webhook (app.py)
+  └─> Signature Verification → Dependency Parser → Risk Classifier → Commenter
+  └─> On merge: Issue Creator → (Future) FARM Findings Integration
 ```
 
-## Contributing
+---
 
-Contributions are welcome! Please open an issue or pull request for any improvements, bug fixes, or new features.
+## 📸 Demo
+1. Open a Pull Request containing a dependency change.  
+2. Bot comments with license summary, risk levels, and remediation links.  
+3. Merge a PR with risky license → Bot opens a GitHub Issue for governance tracking.
 
-## License
+---
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+## 🔮 Next Steps
+- **AMS API Integration:** Replace DepsDev with internal license classification.  
+- **FARM Findings Sync:** Auto-create records in governance platform.  
+- **Gen AI Build Failure Assistant:** Extend to CI/CD pipeline self-healing (innovation track).  
+
+---
+
+## 🙋‍♂️ Team & Contact
+**Satish** 
+
+Thank you for reviewing our submission—looking forward to feedback!
